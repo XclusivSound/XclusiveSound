@@ -705,6 +705,7 @@ nav ul li a:focus::after {
   font-weight: 800;
   font-size: 18px;
   font-family: 'Russo One', sans-serif;
+  margin-bottom: 5px;
 }
 
 /* Footer */
