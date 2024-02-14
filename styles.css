@@ -1068,8 +1068,8 @@ footer {
 
 .course img {
   width: 100%; /* Ajusta el ancho de la imagen al 100% del contenedor */
-  height: 200px; /* Establece una altura fija para todas las imágenes */
-  object-fit: cover; /* Ajusta la imagen para cubrir el contenedor manteniendo la relación de aspecto */
+  height: 100%; /* Establece una altura fija para todas las imágenes */
+  
   border-radius: 8px;
   margin-bottom: 15px;
 }
