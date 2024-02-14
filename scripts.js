@@ -1,6 +1,4 @@
 // Slider de tracks free
-let currentTrack = 0;
-
 function showTracks(n, trackClass) {
   const tracks = document.querySelectorAll(trackClass);
   tracks.forEach((track) => {
@@ -20,6 +18,7 @@ function showTracks(n, trackClass) {
   tracks[currentTrack].classList.add('active');
 }
 
+let currentTrack = 0;
 showTracks(currentTrack, '.track');
 
 document.querySelector('#next-track').addEventListener('click', function () {
@@ -104,7 +103,8 @@ function prevSlide() {
 
 prevButton.addEventListener('click', prevSlide);
 nextButton.addEventListener('click', nextSlide);
-// Código para mostrar testimonios automáticamente cada 3 segundos
+
+// Mostrar testimonios automáticamente cada 3 segundos
 document.addEventListener('DOMContentLoaded', function () {
   const testimonials = document.querySelectorAll('.testimonial');
 
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
   setInterval(showNextTestimonial, 3000);
 });
 
-// Resto del código...
+// Mostrar/Ocultar contenido adicional
 document.addEventListener('DOMContentLoaded', function () {
   const expandIcon = document.querySelector('.expand-icon');
   const additionalContent = document.querySelector('.additional-content');
@@ -153,7 +153,37 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Función para establecer una cookie
+// Mostrar testimonios automáticamente cada 3 segundos (para premium-subscribers)
+document.addEventListener('DOMContentLoaded', function () {
+  const premiumTestimonials = document.querySelectorAll('.subscriber .swiper-slide');
+
+  function hidePremiumTestimonials() {
+    premiumTestimonials.forEach((testimonial, index) => {
+      if (index !== 0) {
+        testimonial.style.display = 'none';
+      }
+    });
+  }
+
+  function showNextPremiumTestimonial() {
+    let currentTestimonial = 0;
+    premiumTestimonials.forEach((testimonial, index) => {
+      if (testimonial.style.display !== 'none') {
+        currentTestimonial = index;
+        testimonial.style.display = 'none';
+      }
+    });
+
+    currentTestimonial = (currentTestimonial + 1) % premiumTestimonials.length;
+    premiumTestimonials[currentTestimonial].style.display = 'block';
+  }
+
+  hidePremiumTestimonials();
+  setInterval(showNextPremiumTestimonial, 3000);
+});
+
+
+// Funciones para gestionar cookies
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
@@ -161,7 +191,6 @@ function setCookie(cname, cvalue, exdays) {
   document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 }
 
-// Función para obtener el valor de una cookie por nombre
 function getCookie(cname) {
   const name = cname + '=';
   const decodedCookie = decodeURIComponent(document.cookie);
@@ -178,23 +207,21 @@ function getCookie(cname) {
   return '';
 }
 
-// Función para aceptar las cookies
 function acceptCookies() {
-  setCookie('cookies_accepted', 'true', 365); // Establecer una cookie llamada 'cookies_accepted' por un año
-  document.getElementById('cookieConsent').style.display = 'none'; // Ocultar la ventana emergente de cookies
+  setCookie('cookies_accepted', 'true', 365); 
+  document.getElementById('cookieConsent').style.display = 'none'; 
 }
 
-// Event listener para el botón "Aceptar"
 document.addEventListener('DOMContentLoaded', function () {
   const acceptCookiesButton = document.getElementById('acceptCookiesButton');
   acceptCookiesButton.addEventListener('click', acceptCookies);
 
-  // Verificar si ya se ha aceptado el consentimiento de cookies
   if (getCookie('cookies_accepted') === 'true') {
     document.getElementById('cookieConsent').style.display = 'none';
   }
 });
 
+// Mostrar testimonios automáticamente cada 3 segundos (para premium-subscribers)
 document.addEventListener('DOMContentLoaded', function () {
   const testimonials = document.querySelectorAll('.premium-subscribers .testimonial');
 
@@ -222,3 +249,5 @@ document.addEventListener('DOMContentLoaded', function () {
   hideTestimonials();
   setInterval(showNextTestimonial, 3000);
 });
+
+
