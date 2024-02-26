@@ -223,7 +223,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Mostrar testimonios automáticamente cada 3 segundos (para premium-subscribers)
 document.addEventListener('DOMContentLoaded', function () {
-  const testimonials = document.querySelectorAll('.premium-subscribers .testimonial');
+  const testimonials = document.querySelectorAll('.subscriber[data-track-index="2"] .testimonial');
+  let currentTestimonialIndex = 0;
 
   function hideTestimonials() {
     testimonials.forEach((testimonial, index) => {
@@ -234,20 +235,73 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function showNextTestimonial() {
-    let currentTestimonial = 0;
-    testimonials.forEach((testimonial, index) => {
-      if (testimonial.style.display !== 'none') {
-        currentTestimonial = index;
-        testimonial.style.display = 'none';
-      }
-    });
-
-    currentTestimonial = (currentTestimonial + 1) % testimonials.length;
-    testimonials[currentTestimonial].style.display = 'block';
+    testimonials[currentTestimonialIndex].style.display = 'none';
+    currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonials.length;
+    testimonials[currentTestimonialIndex].style.display = 'block';
   }
 
   hideTestimonials();
   setInterval(showNextTestimonial, 3000);
 });
 
+// api de conversiones fb
 
+// Establece tus credenciales de acceso y el ID de píxel de Facebook
+const access_token = 'EAAzA0n7cZBa8BO7u4Kth2fMMb9cWEvCzyytJFn2bbAoiCGEqsrec2YS423NOqfpdzpdSTZAbVZAZAxrYHrrWi14wrHcFviaGl1vKZAnFlW6NZAvjLgMaJzMvGPCRANe9UWjzjeKHLJpZAFGoeMtSCJiouKqLPmoVJTy41xqaADbfzGQ9A9qT4vRdHs4OUuB8NAfMwZDZD';
+const pixel_id = '795837598839468';
+
+// Obtiene el tiempo actual en segundos
+const current_timestamp = Math.floor(new Date() / 1000);
+
+// Crea datos de usuario
+const userData_0 = {
+    em: [], // Reemplaza con el correo electrónico del usuario, si lo tienes
+    ph: []  // Deja en blanco si no tienes el número de teléfono del usuario
+};
+
+// Crea datos personalizados para la conversión
+const customData_0 = {
+    value: 7.00,  // Establece el valor de la conversión
+    currency: "USD"  // Establece la moneda de la conversión
+};
+
+// Crea un evento de servidor para la conversión de compra
+const serverEvent_0 = {
+    event_name: "Purchase",  // Establece el nombre del evento (puede ser "Purchase" u otro evento definido en Facebook)
+    event_time: current_timestamp,  // Establece el tiempo del evento
+    user_data: userData_0,  // Establece los datos del usuario
+    custom_data: customData_0,  // Establece los datos personalizados de la conversión
+    action_source: "website"  // Establece la fuente de la acción
+};
+
+// Crea una lista de eventos de conversión
+const eventsData = [serverEvent_0];
+
+// Crea una solicitud de evento
+const eventRequest = {
+    access_token: access_token,
+    pixel_id: pixel_id,
+    events: eventsData
+};
+
+// Convierte la solicitud a una cadena JSON
+const jsonData = JSON.stringify(eventRequest);
+
+// Realiza una solicitud POST a la API de Facebook
+fetch('https://graph.facebook.com/v12.0/' + pixel_id + '/events', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: jsonData
+})
+.then(response => {
+    if (response.ok) {
+        console.log('Evento de conversión enviado exitosamente');
+    } else {
+        console.error('Error al enviar el evento de conversión:', response.statusText);
+    }
+})
+.catch(error => {
+    console.error('Error al enviar el evento de conversión:', error);
+});
